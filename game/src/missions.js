@@ -54,9 +54,15 @@ export class Missions {
       const p = game.playerPos();
       const needCar = stage.needCar && !game.playerInCar();
       if (!needCar && dist2(p.x, p.y, stage.x, stage.y) < stage.r * stage.r) {
+        const stagesBefore = m.stages;
         if (stage.onArrive) stage.onArrive(game, m);
-        m.stage++;
-        if (m.stage >= m.stages.length) this.complete();
+        // A hook may swap in a fresh stage list (the taxi pickup does):
+        // it has already set the stage index, so only advance when the
+        // list is the one we arrived on.
+        if (m.stages === stagesBefore) {
+          m.stage++;
+          if (m.stage >= m.stages.length) this.complete();
+        }
       }
     }
   }

@@ -3,9 +3,8 @@
 // (theft, collisions, gunfire, the bust, the hospital), and draws the frame.
 
 import { DAY, WORLD } from './config.js';
-import { makeRng, clamp, dist2 } from './rng.js';
-import { buildCity, drawCity, nearestNode, roadXs } from './city.js';
-import { Input } from './input.js';
+import { makeRng, clamp, dist2, angleDelta } from './rng.js';
+import { buildCity, drawCity, nearestNode, roadXs } from './city.js';import { Input } from './input.js';
 import { SoundBank } from './audio.js';
 import { Car, spawnTraffic, trafficControl, drawCar } from './vehicles.js';
 import { Ped, spawnPeds } from './peds.js';
@@ -347,6 +346,17 @@ export class Game {
     }
     if (!car) return;
     const control = { throttle: 0, steer: 0, brake: false };
+    if (this.autoDrive) {
+      // Staged scenes only: keep the car rolling. An {angle} autoDrive holds
+      // a heading (a clean avenue cruise); a plain true steers at the job.
+      control.throttle = 1;
+      const target = typeof this.autoDrive === 'object'
+        ? this.autoDrive.angle
+        : (this.missions.objective
+          ? Math.atan2(this.missions.objective.y - car.y, this.missions.objective.x - car.x)
+          : car.angle);
+      control.steer = clamp(angleDelta(car.angle, target) * 1.6, -1, 1);
+    }
     if (input.up) control.throttle = 1;
     if (input.dn) {
       if (car.forwardSpeed > 26) control.brake = true;
@@ -514,4 +524,4 @@ export class Game {
 const canvas = document.getElementById('game');
 const game = new Game(canvas);
 game.start();
-if (new URLSearchParams(location.search).get('shot')) window.__cbh = game;
+window.__cbh = game; // dev handle: the screenshot/smoke tooling drives it

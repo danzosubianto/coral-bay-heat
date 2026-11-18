@@ -204,9 +204,9 @@ export class Hud {
 
   drawTitle(ctx, game, w, h) {
     const grad = ctx.createLinearGradient(0, 0, 0, h);
-    grad.addColorStop(0, 'rgba(16, 24, 44, 0.25)');
-    grad.addColorStop(0.62, 'rgba(16, 24, 44, 0.45)');
-    grad.addColorStop(1, 'rgba(10, 12, 22, 0.88)');
+    grad.addColorStop(0, 'rgba(16, 24, 44, 0.10)');
+    grad.addColorStop(0.62, 'rgba(16, 24, 44, 0.34)');
+    grad.addColorStop(1, 'rgba(10, 12, 22, 0.80)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, w, h);
     ctx.textAlign = 'center';
