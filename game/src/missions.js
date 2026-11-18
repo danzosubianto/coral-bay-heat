@@ -117,11 +117,6 @@ export class Missions {
 
 // --- helpers ----------------------------------------------------------------
 
-function roadPointNear(game, x, y) {
-  const n = game.city.nodes[game.nearestNodeIndex(x, y)];
-  return { x: n.x, y: n.y };
-}
-
 function landmarkFront(game, key) {
   const b = game.city.landmarks[key];
   return { x: b.x + b.w / 2, y: b.y + b.h + 30 };
